@@ -6,7 +6,12 @@ require("dotenv").config();
 const port = process.env.PORT || 5000;
 
 // middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    optionsSuccessStatus: 200,
+  })
+);
 app.use(express.json());
 
 const { MongoClient, ServerApiVersion } = require("mongodb");
@@ -26,6 +31,12 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
+
+    app.get("/user", async (req, res) => {
+      const query = { email: req.params.email };
+      const result = await userCollection.findOne(query);
+      res.send(result);
+    });
 
     app.post("/users", async (req, res) => {
       const user = req.body;
@@ -54,7 +65,7 @@ app.post("/jwt", async (req, res) => {
     expiresIn: "3d",
   });
   res.send({ token });
-  console.log(userEmail);
+  // console.log(userEmail);
 });
 
 app.listen(port, () => {
