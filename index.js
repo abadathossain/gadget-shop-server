@@ -39,6 +39,7 @@ async function run() {
       res.send(result);
     });
 
+    // create user
     app.post("/users", async (req, res) => {
       const user = req.body;
       const result = await userCollection.insertOne(user);
@@ -60,6 +61,7 @@ app.get("/", (req, res) => {
   res.send("Gadget shop is running");
 });
 
+// for jwt
 app.post("/jwt", async (req, res) => {
   const userEmail = req.body;
   const token = jwt.sign(userEmail, process.env.ACCESS_TOKEN_SECRET, {
